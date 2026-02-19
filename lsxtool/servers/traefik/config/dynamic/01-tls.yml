@@ -1,0 +1,6 @@
+tls:
+  certificates:
+    - certFile: "/certs/domains-170.lunarsystemx.com.crt"
+      keyFile: "/certs/domains-170.lunarsystemx.com.key"
+    # - certFile: "/certs/notificaciones.lunarsystemx.com.crt"
+    #   keyFile: "/certs/notificaciones.lunarsystemx.com.key"

@@ -1,0 +1,23 @@
+version: 1
+
+# Archivos de providers
+providers:
+  - providers/lsx.yaml
+  - providers/stic.yaml
+
+# Archivos de servers físicos
+servers:
+  - servers/srvecnom-dev.yaml
+
+# Archivos de dominios (uno por dominio)
+domains:
+  - domains/dev-identity.lunarsystemx.com.yaml
+
+# Archivos de servicios (opcional, para agrupar dominios relacionados)
+services:
+  - services/identity-api.yaml
+
+# Defaults globales (pueden estar también en globals.yaml)
+defaults:
+  backend: nginx
+  environment: dev

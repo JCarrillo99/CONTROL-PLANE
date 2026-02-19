@@ -1,0 +1,40 @@
+# Configuración para dev-sied.yucatan.gob.mx - Traefik 3.4
+# Apache en puerto 9200 sirve aplicación PHP (CodeIgniter)
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    dev-sied-http:
+      rule: "Host(`dev-sied.yucatan.gob.mx`)"
+      service: apache-9200-sied
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    dev-sied:
+      rule: "Host(`dev-sied.yucatan.gob.mx`)"
+      service: apache-9200-sied
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Apache local - Puerto 9200
+    apache-9200-sied:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9200"
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+          scheme: http
+

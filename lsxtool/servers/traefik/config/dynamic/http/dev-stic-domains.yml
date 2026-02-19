@@ -1,0 +1,463 @@
+# Configuración para múltiples dominios STIC - Traefik 3.4
+# Apache en puerto 9200 sirve archivos estáticos desde el sistema de archivos
+# Cada dominio tiene su propio router para mejor organización y mantenibilidad
+
+http:
+  routers:
+    # Router para dev-ady.yucatan.gob.mx
+    dev-ady:
+      rule: "Host(`dev-ady.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-aeropuertochichen.yucatan.gob.mx
+    dev-aeropuertochichen:
+      rule: "Host(`dev-aeropuertochichen.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-asistenciaprivada.yucatan.gob.mx
+    dev-asistenciaprivada:
+      rule: "Host(`dev-asistenciaprivada.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-bienestar.yucatan.gob.mx
+    dev-bienestar:
+      rule: "Host(`dev-bienestar.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-cai.yucatan.gob.mx
+    dev-cai:
+      rule: "Host(`dev-cai.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-cecytey.yucatan.gob.mx
+    dev-cecytey:
+      rule: "Host(`dev-cecytey.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-ceeav.yucatan.gob.mx
+    dev-ceeav:
+      rule: "Host(`dev-ceeav.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-centrolaboral.yucatan.gob.mx
+    dev-centrolaboral:
+      rule: "Host(`dev-centrolaboral.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers-allow-sameorigin
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-consejopoblacion.yucatan.gob.mx
+    dev-consejopoblacion:
+      rule: "Host(`dev-consejopoblacion.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-culturatributaria.yucatan.gob.mx
+    dev-culturatributaria:
+      rule: "Host(`dev-culturatributaria.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-deporte-v2.yucatan.gob.mx
+    dev-deporte-v2:
+      rule: "Host(`dev-deporte-v2.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-desarrollosocial.yucatan.gob.mx
+    dev-desarrollosocial:
+      rule: "Host(`dev-desarrollosocial.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-discapacidad.yucatan.gob.mx
+    dev-discapacidad:
+      rule: "Host(`dev-discapacidad.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para development
+    development:
+      rule: "Host(`development`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-intranet.yucatan.gob.mx
+    dev-intranet:
+      rule: "Host(`dev-intranet.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-juventudes.yucatan.gob.mx
+    dev-juventudes:
+      rule: "Host(`dev-juventudes.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-movilidad.yucatan.gob.mx
+    dev-movilidad:
+      rule: "Host(`dev-movilidad.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-mujeres.yucatan.gob.mx
+    dev-mujeres:
+      rule: "Host(`dev-mujeres.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers-allow-sameorigin
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-oemy.yucatan.gob.mx
+    dev-oemy:
+      rule: "Host(`dev-oemy.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-palaciodelamusica.yucatan.gob.mx
+    dev-palaciodelamusica:
+      rule: "Host(`dev-palaciodelamusica.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-pesca.yucatan.gob.mx
+    dev-pesca:
+      rule: "Host(`dev-pesca.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-pontealdia.yucatan.gob.mx
+    dev-pontealdia:
+      rule: "Host(`dev-pontealdia.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-redsustentable.yucatan.gob.mx
+    dev-redsustentable:
+      rule: "Host(`dev-redsustentable.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-reemplacamiento2025.yucatan.gob.mx
+    dev-reemplacamiento2025:
+      rule: "Host(`dev-reemplacamiento2025.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-reservaucu.yucatan.gob.mx
+    dev-reservaucu:
+      rule: "Host(`dev-reservaucu.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-salud.yucatan.gob.mx
+    dev-salud:
+      rule: "Host(`dev-salud.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-sne.yucatan.gob.mx
+    dev-sne:
+      rule: "Host(`dev-sne.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-teleyucatan-v2.gob.mx
+    # Router HTTP - redirige a HTTPS
+    dev-teleyucatan-v2-gob-http:
+      rule: "Host(`dev-teleyucatan-v2.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    dev-teleyucatan-v2-gob:
+      rule: "Host(`dev-teleyucatan-v2.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers-allow-sameorigin
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+    # Router para dev-vayven.yucatan.gob.mx
+    dev-vayven:
+      rule: "Host(`dev-vayven.yucatan.gob.mx`)"
+      service: apache-9200-stic
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 50
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Apache local - Puerto 9200 (serviendo archivos estáticos)
+    # Todos los routers comparten este servicio, pero se puede crear servicios
+    # individuales si algún dominio necesita balanceador de carga diferente
+    apache-9200-stic:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9200"
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+          scheme: http

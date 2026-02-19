@@ -1,0 +1,51 @@
+# Dominio frontend (formato v3)
+# Copia a .lsxtool/providers/<provider>/servers/nginx/<env>/sites/<domain>.yaml
+
+domain: dev-identity.lunarsystemx.com
+role: frontend
+environment: dev
+provider: lunarsystemx
+
+server_web:
+  type: nginx
+  version: "1.26.3"
+
+root:
+  path: /mnt/d/www/00-LSX/100-projects/demos/php/frontend
+  owner: equipo-identity
+  technical_user: michael.carrillo
+
+# Routes como LISTA con name explícito
+routes:
+
+  - name: api_identity
+    type: proxy
+    upstream_ref: api__identity
+    uri:
+      public: /api/identity/
+      upstream: /
+      strategy: strip
+
+  - name: api_demo
+    type: proxy
+    upstream_ref: api__demo
+    uri:
+      public: /api/demo/
+      upstream: /
+      strategy: strip
+
+  - name: api_cluster
+    type: proxy
+    upstream_ref: api__identity
+    uri:
+      public: /api/
+      upstream: /api/
+      strategy: passthrough
+
+  - name: frontend_php
+    type: proxy
+    upstream_ref: frontend__php_demo
+    uri:
+      public: /
+      upstream: /
+      strategy: passthrough

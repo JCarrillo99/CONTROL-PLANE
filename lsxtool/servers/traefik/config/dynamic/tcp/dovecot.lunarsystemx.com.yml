@@ -1,0 +1,24 @@
+tcp:
+  routers:
+    imap-router:
+      rule: "HostSNI(`*`)"
+      service: imap-service
+      entryPoints:
+        - imaps
+
+    pop3-router:
+      rule: "HostSNI(`*`)"
+      service: pop3-service
+      entryPoints:
+        - pop3s
+
+  services:
+    imap-service:
+      loadBalancer:
+        servers:
+          - address: "dovecot:993"
+
+    pop3-service:
+      loadBalancer:
+        servers:
+          - address: "dovecot:995" 

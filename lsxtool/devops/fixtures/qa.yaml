@@ -1,0 +1,43 @@
+# Fixture de ambiente QA
+# Datos de prueba para ambiente de calidad
+
+environment: qa
+description: Ambiente de calidad y pruebas
+
+server:
+  host: 192.168.25.101
+  user: deploy
+  port: 22
+  auth:
+    type: key
+    key_path: ~/.ssh/id_rsa
+
+gitlab:
+  url: https://gitlab.yucatan.gob.mx
+  token: glpat-fake-token-for-qa-testing-only
+  project: grupo/proyecto-qa
+  default_branch: qa
+
+repository:
+  url: git@gitlab.yucatan.gob.mx:grupo/proyecto-qa.git
+  branch: qa
+  path: /mnt/d/www/qa/proyecto
+
+runner:
+  tags:
+    - qa
+    - docker
+  enabled: true
+
+project_type: laravel
+
+deploy:
+  steps:
+    - composer install --no-dev --optimize-autoloader
+    - php artisan migrate --force
+    - php artisan config:cache
+    - php artisan route:cache
+    - php artisan view:cache
+  post_deploy:
+    - php artisan queue:restart
+    - php artisan horizon:terminate

@@ -1,0 +1,35 @@
+server {
+    listen {{PORT}};
+    listen [::]:{{PORT}};
+    server_name {{DOMAIN}};
+    
+    # Angular build output (archivos estáticos)
+    root {{ROOT_PATH}};
+    index index.html;
+    
+    # ========== SNIPPETS ==========
+    
+    include /etc/nginx/snippets/server/00-core/01-security/security-server.conf;
+    include /etc/nginx/snippets/server/00-core/05-gzip/gzip.conf;
+    include /etc/nginx/snippets/server/00-core/02-headers/headers.conf;
+    include /etc/nginx/snippets/server/00-core/04-cache/cache-server.conf;
+    
+    # ========== LOGS ==========
+    access_log /var/log/nginx/{{SITE_NAME}}-access.log;
+    error_log /var/log/nginx/{{SITE_NAME}}-error.log;
+    
+    # ========== UBICACIONES ==========
+    
+    # Angular routing
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+    
+    # Assets con hash - caché permanente
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+}
+

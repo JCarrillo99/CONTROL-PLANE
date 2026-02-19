@@ -1,0 +1,23 @@
+service:
+  id: postgresql
+  category: database
+  supports:
+    versions:
+      - 11
+      - 13
+      - 17
+  modes:
+    - host
+    - docker
+
+  docker:
+    images:
+      official:
+        "11": postgres:11
+        "17": postgres:17
+      lsx:
+        "17": registry.lunarsystemx.com/db/postgresql:17
+
+  ports:
+    default: 5432
+    alternative: true

@@ -1,0 +1,41 @@
+tcp:
+  routers:
+    smtp25-router:
+      rule: "HostSNI(`*`)"
+      entryPoints:
+        - smtp
+      service: smtp25-service
+      tls:
+        passthrough: true
+
+    smtp465-router:
+      rule: "HostSNI(`*`)"
+      entryPoints:
+        - smtps
+      service: smtp465-service
+      tls:
+        passthrough: true
+
+    smtp587-router:
+      rule: "HostSNI(`*`)"
+      entryPoints:
+        - submission
+      service: smtp587-service
+      tls:
+        passthrough: true
+
+  services:
+    smtp25-service:
+      loadBalancer:
+        servers:
+          - address: "postfix:25"
+
+    smtp465-service:
+      loadBalancer:
+        servers:
+          - address: "postfix:465"
+
+    smtp587-service:
+      loadBalancer:
+        servers:
+          - address: "postfix:587"

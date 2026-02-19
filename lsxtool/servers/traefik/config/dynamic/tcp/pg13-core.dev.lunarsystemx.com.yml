@@ -1,0 +1,17 @@
+# TCP: pg13-core.dev.lunarsystemx.com → 192.168.20.234:5433 (PostgreSQL en Windows)
+# Traefik en WSL (172.20.70.169) escucha en 5433 y reenvía a la BD.
+# Solo hace falta en hosts de Windows: 172.20.70.169  pg13-core.dev.lunarsystemx.com
+
+tcp:
+  routers:
+    pg13-core-dev-router:
+      rule: "HostSNI(`*`)"
+      entryPoints:
+        - postgres-dev
+      service: pg13-core-dev-service
+
+  services:
+    pg13-core-dev-service:
+      loadBalancer:
+        servers:
+          - address: "192.168.20.234:5433"

@@ -1,0 +1,64 @@
+# Upstream con Canary Routing (formato v3)
+# Copia a .lsxtool/providers/<provider>/servers/nginx/<env>/upstreams/<ref>.yaml
+
+upstream:
+  name: api__demo
+  service_type: api
+
+  identity:
+    slug: demo
+    domain_group: demo
+
+  exposure:
+    access_type: internal
+
+  routing:
+    strategy: canary
+    algorithm: weighted
+    canary:
+      mode: percentage
+      base_weight: 90   # % tráfico a versión estable (base_weight + canary_weight = 100)
+      canary_weight: 10 # % tráfico a versión experimental
+
+  observability:
+    metrics:
+      enabled: true
+      per_node: true
+
+  # Nodos BASE + CANARY (peso relativo dentro de cada grupo)
+  nodes:
+    - name: demo_php_72
+      group: base
+      weight: 50
+      runtime:
+        host: 172.20.70.169
+        port: 8056
+      tech:
+        language: php
+        version: '7.2'
+        provider: system
+        manager: composer
+
+    - name: demo_php_74
+      group: base
+      weight: 50
+      runtime:
+        host: 172.20.70.169
+        port: 8057
+      tech:
+        language: php
+        version: '7.4'
+        provider: system
+        manager: composer
+
+    - name: demo_php_82
+      group: canary
+      weight: 100
+      runtime:
+        host: 172.20.70.169
+        port: 8058
+      tech:
+        language: php
+        version: '8.2'
+        provider: system
+        manager: composer

@@ -1,0 +1,19 @@
+provider:
+  id: lunarsystemx
+  name: Lunar System X
+  domain_suffix: lunarsystemx.com
+  internal_namespace: LSX
+capabilities:
+  servers_web:
+    services:
+    - nginx
+    - apache
+    - traefik
+    - caddy
+    targets:
+    - host
+    - docker
+    environments:
+    - dev
+    - qa
+    - prod

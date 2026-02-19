@@ -1,0 +1,104 @@
+# Configuración principal de Traefik 3.4 - Desarrollo
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+# API y Dashboard
+# api:
+#   dashboard: true
+#   insecure: true
+#   debug: true
+api:
+  dashboard: true
+  insecure: false
+
+# Entrypoints
+entryPoints:
+  web:
+    address: ":80"
+
+  websecure:
+    address: ":443"
+
+  smtp:
+    address: ":25"
+
+  submission:
+    address: ":587"
+
+  smtps:
+    address: ":465"
+
+  imaps:
+    address: ":993"
+
+  pop3s:
+    address: ":995"
+
+  mysql:
+    address: ":3306"
+
+  postgres:
+    address: ":5432"
+
+  # PostgreSQL 13 core (dev) - pg13-core.dev.lunarsystemx.com
+  postgres-dev:
+    address: ":5433"
+
+  dashboard:
+    address: ":8080"
+
+  metrics:
+    address: ":9000"
+
+# Providers
+providers:
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true
+  # docker:
+    # endpoint: "unix:///var/run/docker.sock"
+    # exposedByDefault: false
+    # network: traefik-proxy
+
+# Certificate Resolvers
+certificatesResolvers:
+  cloudflare:
+    acme:
+      email: "admin@lunarsystemx.com"
+      storage: "/acme/acme-dns.json"
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 0
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+
+  letsencrypt:
+    acme:
+      email: "admin@lunarsystemx.com"
+      storage: "/acme/acme-http.json"
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      httpChallenge:
+        entryPoint: web
+
+# Logs
+log:
+  level: DEBUG
+
+# Metrics
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+    addServicesLabels: true
+    entryPoint: dashboard
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+
+# Ping endpoint for health checks
+# ping:
+#   entryPoint: dashboard

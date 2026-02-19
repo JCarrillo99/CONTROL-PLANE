@@ -1,0 +1,77 @@
+# Configuración principal de Traefik 3.4 - Producción
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+# API y Dashboard
+api:
+  dashboard: true
+  debug: false
+  insecure: false
+
+# Entrypoints
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+  mysql:
+    address: ":3306"
+  postgres:
+    address: ":5432"
+  redis:
+    address: ":6379"
+  mongodb:
+    address: ":27017"
+
+# Providers
+providers:
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    network: traefik-network
+
+# Certificate Resolvers
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: admin@example.com
+      storage: /etc/traefik/acme/acme.json
+      httpChallenge:
+        entryPoint: web
+      dnsChallenge:
+        provider: cloudflare
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+
+# Logs
+log:
+  level: INFO
+  # filePath: /var/log/traefik/traefik.log
+  format: json
+
+# Access Logs
+# accessLog:
+#   filePath: /var/log/traefik/access.log
+#   format: json
+#   fields:
+#     defaultMode: keep
+#     headers:
+#       defaultMode: keep
+
+# Metrics
+metrics:
+  prometheus:
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+
+# Ping endpoint for health checks
+ping:
+  entryPoint: dashboard

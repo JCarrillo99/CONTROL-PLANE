@@ -1,0 +1,67 @@
+# Configuración para qa-cluster-1.yucatan.gob.mx - Modo DOCKER
+# Este archivo es un ejemplo. Renombrar a .yml cuando se use Docker
+# O agregar labels directamente en docker-compose.yml
+
+http:
+  routers:
+    # Router principal - qa-cluster-1.yucatan.gob.mx (DOCKER)
+    qa-cluster-1-main:
+      rule: "Host(`qa-cluster-1.yucatan.gob.mx`)"
+      service: nginx-9100-docker
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: qa-cluster-1.yucatan.gob.mx
+
+  services:
+    # Servicio Docker - Contenedor del frontend
+    nginx-9100-docker:
+      loadBalancer:
+        servers:
+          - url: "http://template-vue-frontend:80"
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+
+    # Servicio Docker - Backend API (cluster-1)
+    cluster-1-backend-docker:
+      loadBalancer:
+        servers:
+          - url: "http://cluster-1-backend:80"
+        healthCheck:
+          path: /api/health
+          interval: 30s
+          timeout: 5s
+
+# Ejemplo de docker-compose.yml labels para usar directamente:
+#
+# services:
+#   template-vue-frontend:
+#     image: nginx:alpine
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.qa-cluster-1.rule=Host(`qa-cluster-1.yucatan.gob.mx`)"
+#       - "traefik.http.routers.qa-cluster-1.entrypoints=web,websecure"
+#       - "traefik.http.routers.qa-cluster-1.middlewares=redirect-to-https,security-headers,compress"
+#       - "traefik.http.routers.qa-cluster-1.tls.certresolver=letsencrypt"
+#       - "traefik.http.services.template-vue-frontend.loadbalancer.server.port=80"
+#
+#   cluster-1-backend:
+#     image: php:8.2-fpm
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.cluster-1-api.rule=Host(`qa-cluster-1.yucatan.gob.mx`) && PathPrefix(`/api/authorization`, `/storage`)"
+#       - "traefik.http.routers.cluster-1-api.entrypoints=web,websecure"
+#       - "traefik.http.routers.cluster-1-api.middlewares=redirect-to-https,security-headers"
+#       - "traefik.http.routers.cluster-1-api.tls.certresolver=letsencrypt"
+#       - "traefik.http.services.cluster-1-backend.loadbalancer.server.port=80"
+

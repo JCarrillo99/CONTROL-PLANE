@@ -1,0 +1,42 @@
+# Fixture de ambiente DEV
+# Datos de prueba para ambiente de desarrollo
+
+environment: dev
+description: Ambiente de desarrollo
+
+server:
+  host: 192.168.25.100
+  user: deploy
+  port: 22
+  auth:
+    type: key  # key, password, o none
+    key_path: ~/.ssh/id_rsa
+    # password: "password123"  # Solo para mock/testing
+
+gitlab:
+  url: https://gitlab.yucatan.gob.mx
+  token: glpat-fake-token-for-dev-testing-only
+  project: grupo/proyecto-dev
+  default_branch: develop
+
+repository:
+  url: git@gitlab.yucatan.gob.mx:grupo/proyecto-dev.git
+  branch: develop
+  path: /mnt/d/www/dev/proyecto
+
+runner:
+  tags:
+    - dev
+    - docker
+  enabled: true
+
+project_type: laravel  # laravel, php, node, python, etc.
+
+deploy:
+  steps:
+    - composer install --no-dev
+    - php artisan migrate --force
+    - php artisan config:cache
+    - php artisan route:cache
+  post_deploy:
+    - php artisan queue:restart

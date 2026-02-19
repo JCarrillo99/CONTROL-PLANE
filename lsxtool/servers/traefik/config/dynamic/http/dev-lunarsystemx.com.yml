@@ -1,0 +1,42 @@
+# Configuración para dev-lunarsystemx.com - Traefik 3.4
+# Modo LOCAL: Traefik apunta a Nginx en puerto 9100
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    lunarsystemx-com-http:
+      rule: "Host(`dev-lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    lunarsystemx-com-main:
+      rule: "Host(`dev-lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Nginx local - Puerto 9100
+    nginx-9100-lunarsystemx:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9100"
+        passHostHeader: true
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+          scheme: http
+          headers:
+            Host: dev-lunarsystemx.com

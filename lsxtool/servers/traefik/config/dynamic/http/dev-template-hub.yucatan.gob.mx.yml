@@ -1,0 +1,37 @@
+# Configuración para dev-cluster-1.yucatan.gob.mx - Traefik 3.4
+# Modo LOCAL: Traefik apunta a Nginx en puerto 9100 que sirve aplicación Laravel
+# PHP 7.4-FPM
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    dev-cluster-1-http:
+      rule: "Host(`dev-cluster-1.yucatan.gob.mx`)"
+      service: nginx-9100-cluster-1
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    dev-cluster-1-main:
+      rule: "Host(`dev-cluster-1.yucatan.gob.mx`)"
+      service: nginx-9100-cluster-1
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Nginx local - Puerto 9100 (serviendo aplicación Laravel)
+    nginx-9100-cluster-1:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9100"
+        passHostHeader: true
+

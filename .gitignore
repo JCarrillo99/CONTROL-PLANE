@@ -1,0 +1,19 @@
+# Ignorar enlaces simbólicos en sites-enabled (causan problemas con Git en Windows/WSL)
+# Los archivos reales están en sites-available y sí se rastrean
+apache/configuration/etc/apache2/sites-enabled/
+apache/configuration/etc/apache2/sites-enabled/*
+apache/configuration/etc/apache2/sites-enabled/**/*
+
+venv/
+scripts/backups/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzw
+*.pyz
+*.pywz
+*.pyzw

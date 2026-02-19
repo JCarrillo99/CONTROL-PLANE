@@ -1,0 +1,105 @@
+http:
+  middlewares:
+    # Dashboard con auth + security headers + redirect.
+    # APIs con cors + rate-limit + compress.
+    common-auth:
+      basicAuth:
+        users:
+          - "admin:$2y$05$OFwOWGwgDI4SCMcPGdTzouF/RU4URCtr7BWwIoPhw4lL5jGVU9UUi" # admin TuContraseñaSegura
+        
+    security-headers:
+      headers:
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        sslRedirect: true
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+
+    security-headers-allow-sameorigin:
+      headers:
+        customFrameOptionsValue: "SAMEORIGIN"
+        contentTypeNosniff: true
+        browserXssFilter: true
+        sslRedirect: true
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+
+    # Igual que security-headers pero sin tocar X-Frame-Options (usar con frame-strip + frame-allow-sameorigin)
+    security-headers-no-frame:
+      headers:
+        contentTypeNosniff: true
+        browserXssFilter: true
+        sslRedirect: true
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+
+    # Quita X-Frame-Options del backend (valor vacío = eliminar header)
+    frame-strip:
+      headers:
+        customResponseHeaders:
+          X-Frame-Options: ""
+
+    # Luego fuerza SAMEORIGIN para permitir iframes mismo origen
+    frame-allow-sameorigin:
+      headers:
+        customResponseHeaders:
+          X-Frame-Options: "SAMEORIGIN"
+          Content-Security-Policy: "frame-ancestors 'self'"
+  
+    common-headers:
+      headers:
+        customResponseHeaders:
+          X-Frame-Options: "SAMEORIGIN"
+          X-Content-Type-Options: "nosniff"
+          Referrer-Policy: "no-referrer"
+          Content-Security-Policy: "frame-ancestors 'self'"
+          Strict-Transport-Security: "max-age=63072000; includeSubDomains; preload"
+
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    
+    cors:
+      headers:
+        accessControlAllowOriginList:
+          - "http://localhost:3000"
+          - "http://localhost:8080"
+          - "http://localhost:8081"
+          - "http://localhost:8082"
+          - "http://localhost:8083"
+        accessControlAllowMethods:
+          - "GET"
+          - "OPTIONS"
+          - "PUT"
+          - "POST"
+          - "DELETE"
+        accessControlAllowHeaders:
+          - "Origin"
+          - "Content-Type"
+          - "Accept"
+          - "Authorization"
+        accessControlAllowCredentials: true
+        accessControlMaxAge: 100
+    
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 200
+        period: 1m
+
+    compress:
+      compress: {}
+
+    no-op:
+      plugin:
+        noop: {}
+
+
+    
+
+

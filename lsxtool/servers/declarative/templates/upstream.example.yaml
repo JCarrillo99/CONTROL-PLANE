@@ -1,0 +1,28 @@
+# Catálogo de upstream - Ejemplo
+# Copia a .lsxtool/upstreams/<nombre>.yaml (ej: api-identity-dev.yaml)
+# Referencia desde dominios con: server_web.upstream_ref: api_identity_dev
+
+name: api_identity_dev
+type: weighted          # single | weighted
+protocol: http
+strategy: canary        # opcional: canary | round_robin
+
+servers:
+  - host: 127.0.0.1
+    port: 3001
+    weight: 90
+    role: stable
+  - host: 192.168.20.234
+    port: 3001
+    weight: 10
+    role: canary
+
+healthcheck:
+  path: /health
+  interval: 5s
+
+canary:
+  enabled: true
+  current_weight: 10
+  step: 10
+  max: 50

@@ -1,0 +1,14 @@
+tcp:
+  routers:
+    mysql-router:
+      # rule: "HostSNI(`mysql.lunarsystemx.com`)"
+      rule: "HostSNI(`*`)"
+      service: mysql-service
+      entryPoints:
+        - mysql
+
+  services:
+    mysql-service:
+      loadBalancer:
+        servers:
+          - address: "mysql:3306" 

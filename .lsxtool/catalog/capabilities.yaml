@@ -1,0 +1,5 @@
+# Capacidades declaradas (deben existir en catalog/capabilities/{id}.yaml)
+# Ej.: security → capabilities/security.yaml, servers → capabilities/servers.yaml
+capabilities:
+  - security
+  - servers

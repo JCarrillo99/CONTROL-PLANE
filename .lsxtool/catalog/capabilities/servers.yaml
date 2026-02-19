@@ -1,0 +1,31 @@
+# Catálogo core de lsxtool (no pertenece al provider)
+capability: servers
+
+server_types:
+  web:
+    label: Servidores Web
+    services:
+      - nginx
+      - apache
+      - traefik
+    targets:
+      - host
+      - docker
+    environments:
+      - dev
+      - qa
+      - prod
+
+  database:
+    label: Bases de Datos
+    services:
+      - postgresql
+      - mysql
+      - redis
+    targets:
+      - host
+      - docker
+    environments:
+      - dev
+      - qa
+      - prod

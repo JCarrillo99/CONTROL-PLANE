@@ -1,0 +1,21 @@
+service:
+  id: apache
+  category: web
+  supports:
+    versions:
+      - "2.4"
+  modes:
+    - host
+    - docker
+  host:
+    layouts:
+      default:
+        root: /etc/apache2
+        artifacts:
+          config:
+            - path: sites-available
+              type: dir
+              preserve_tree: true
+            - path: sites-enabled
+              type: dir
+              preserve_tree: true

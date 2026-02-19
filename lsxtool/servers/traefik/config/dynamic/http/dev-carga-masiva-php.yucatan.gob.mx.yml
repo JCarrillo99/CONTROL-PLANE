@@ -1,0 +1,44 @@
+# Configuración para dev-carga-masiva-php.yucatan.gob.mx - Traefik 3.4
+# Modo LOCAL: Traefik apunta a Apache en puerto 9200 que sirve aplicación Laravel
+# PHP 8.4-FPM
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    dev-carga-masiva-php-http:
+      rule: "Host(`dev-carga-masiva-php.yucatan.gob.mx`)"
+      service: apache-9200-carga-masiva-php
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    dev-carga-masiva-php-main:
+      rule: "Host(`dev-carga-masiva-php.yucatan.gob.mx`)"
+      service: apache-9200-carga-masiva-php
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Apache local - Puerto 9200 (serviendo aplicación Laravel)
+    apache-9200-carga-masiva-php:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9200"
+        passHostHeader: true
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+          scheme: http
+          headers:
+            Host: dev-carga-masiva-php.yucatan.gob.mx
+

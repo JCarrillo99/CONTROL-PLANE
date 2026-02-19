@@ -1,0 +1,64 @@
+service:
+  id: nginx
+  category: web
+
+  supports:
+    versions:
+      - "1.18"
+      - "1.20"
+      - "1.22"
+      - "1.26"
+
+  modes:
+    - host
+    - docker
+
+  host:
+    layouts:
+      default:
+        root: /etc/nginx
+
+        artifacts:
+          config:
+            - path: nginx.conf
+              type: file
+
+            - path: conf.d
+              type: dir
+              preserve_tree: true
+
+            - path: sites-enabled
+              type: dir
+              preserve_tree: true
+
+            - path: snippets
+              type: dir
+              preserve_tree: true
+
+          modules:
+            - path: modules-enabled
+              type: dir
+              preserve_tree: true
+
+          runtime:
+            - path: /var/log/nginx
+              type: dir
+              optional: true
+
+  docker:
+    images:
+      official:
+        "1.26": nginx:1.26
+      lsx:
+        "1.26": registry.lunarsystemx.com/servers/web/nginx:1.26
+
+    layouts:
+      default:
+        root: /etc/nginx
+        artifacts:
+          config:
+            - path: nginx.conf
+              type: file
+            - path: conf.d
+              type: dir
+              preserve_tree: true

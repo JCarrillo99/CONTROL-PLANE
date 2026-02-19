@@ -1,0 +1,26 @@
+[Unit]
+Description=Apache Configuration Sync Daemon
+Documentation=man:inotifywait(1)
+After=network.target apache2.service
+Wants=apache2.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/debian-trixie/servers-install/apache/sync
+ExecStart=/home/debian-trixie/servers-install/apache/sync/apache-sync-daemon.sh
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+User=root
+Group=root
+
+# Seguridad (ProtectSystem=false para permitir escritura en /etc)
+NoNewPrivileges=false
+PrivateTmp=true
+ProtectSystem=false
+ProtectHome=false
+
+[Install]
+WantedBy=multi-user.target
+

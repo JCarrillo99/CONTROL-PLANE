@@ -1,0 +1,48 @@
+# Fixture de ambiente PROD
+# Datos de prueba para ambiente de producción
+# ⚠️  NO usar tokens reales en este archivo
+
+environment: prod
+description: Ambiente de producción
+
+server:
+  host: 192.168.25.102
+  user: deploy
+  port: 22
+  auth:
+    type: key
+    key_path: ~/.ssh/id_rsa_prod
+    # password: "NEVER_STORE_REAL_PASSWORDS_HERE"
+
+gitlab:
+  url: https://gitlab.yucatan.gob.mx
+  token: glpat-fake-token-for-prod-testing-only
+  project: grupo/proyecto-prod
+  default_branch: main
+
+repository:
+  url: git@gitlab.yucatan.gob.mx:grupo/proyecto-prod.git
+  branch: main
+  path: /mnt/d/www/prod/proyecto
+
+runner:
+  tags:
+    - prod
+    - docker
+  enabled: true
+
+project_type: laravel
+
+deploy:
+  steps:
+    - composer install --no-dev --optimize-autoloader --no-interaction
+    - php artisan down
+    - php artisan migrate --force
+    - php artisan config:cache
+    - php artisan route:cache
+    - php artisan view:cache
+    - php artisan up
+  post_deploy:
+    - php artisan queue:restart
+    - php artisan horizon:terminate
+  rollback_on_error: true

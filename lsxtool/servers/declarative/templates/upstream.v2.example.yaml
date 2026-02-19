@@ -1,0 +1,22 @@
+# Upstream (formato v2)
+# Copia a .lsxtool/providers/<provider>/servers/nginx/<env>/upstreams/<name>.yaml
+
+upstream:
+  name: api__identity
+  service_type: api
+
+  domains:
+    canonical: api.identity.lunarsystemx.com
+
+  exposure:
+    access_type: internal
+
+  tech:
+    language: node
+    version: "20"
+    provider: volta
+    manager: yarn
+
+  runtime:
+    host: 192.168.20.234
+    port: 3001

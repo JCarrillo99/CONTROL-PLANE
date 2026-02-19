@@ -1,0 +1,37 @@
+# Configuración para dev-modelado.yucatan.gob.mx - Traefik 3.4
+# Modo LOCAL: Traefik apunta a Nginx en puerto 9100 que sirve aplicación PHP
+# PHP 8.2-FPM
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    dev-modelado-http:
+      rule: "Host(`dev-modelado.yucatan.gob.mx`)"
+      service: nginx-9100-modelado
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    dev-modelado-main:
+      rule: "Host(`dev-modelado.yucatan.gob.mx`)"
+      service: nginx-9100-modelado
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Nginx local - Puerto 9100 (serviendo aplicación PHP)
+    nginx-9100-modelado:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9100"
+        passHostHeader: true
+

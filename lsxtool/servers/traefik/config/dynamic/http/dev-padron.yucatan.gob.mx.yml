@@ -1,0 +1,44 @@
+# Configuración para dev-padron.yucatan.gob.mx - Traefik 3.4
+# Modo LOCAL: Traefik apunta a Apache en puerto 9200 que sirve aplicación PHP
+# PHP 7.2-FPM
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    dev-padron-http:
+      rule: "Host(`dev-padron.yucatan.gob.mx`)"
+      service: apache-9200-padron
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    dev-padron-main:
+      rule: "Host(`dev-padron.yucatan.gob.mx`)"
+      service: apache-9200-padron
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Apache local - Puerto 9200 (serviendo aplicación PHP)
+    apache-9200-padron:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9200"
+        passHostHeader: true
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+          scheme: http
+          headers:
+            Host: dev-padron.yucatan.gob.mx
+

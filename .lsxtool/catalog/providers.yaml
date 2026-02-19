@@ -1,0 +1,6 @@
+providers:
+- id: lunarsystemx
+  name: Lunar System X
+  config: config/lunarsystemx.yaml
+  domain_suffix: lunarsystemx.com
+  internal_namespace: LSX

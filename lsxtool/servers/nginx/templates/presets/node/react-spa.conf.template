@@ -1,0 +1,53 @@
+server {
+    listen {{PORT}};
+    listen [::]:{{PORT}};
+    server_name {{DOMAIN}};
+    
+    # React build output (dist/ o build/)
+    root {{ROOT_PATH}};
+    index index.html;
+    
+    # ========== SNIPPETS ==========
+    
+    # Seguridad básica
+    include /etc/nginx/snippets/server/00-core/01-security/security-server.conf;
+    
+    # Compresión gzip (importante para bundles de React)
+    include /etc/nginx/snippets/server/00-core/05-gzip/gzip.conf;
+    
+    # Headers de seguridad (CSP configurado para React)
+    include /etc/nginx/snippets/server/00-core/02-headers/headers.conf;
+    
+    # Caché agresivo para chunks con hash
+    include /etc/nginx/snippets/server/00-core/04-cache/cache-server.conf;
+    
+    # ========== LOGS ==========
+    access_log /var/log/nginx/{{SITE_NAME}}-access.log;
+    error_log /var/log/nginx/{{SITE_NAME}}-error.log;
+    
+    # ========== UBICACIONES ==========
+    
+    # React Router - todas las rutas van a index.html
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+    
+    # Assets estáticos con caché largo (archivos con hash)
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+    
+    # Service worker (no cachear)
+    location = /service-worker.js {
+        add_header Cache-Control "no-cache";
+        expires off;
+    }
+    
+    # Manifest (caché corto)
+    location = /manifest.json {
+        add_header Cache-Control "public, max-age=604800";
+    }
+}
+

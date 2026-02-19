@@ -1,0 +1,39 @@
+server {
+    listen {{PORT}};
+    listen [::]:{{PORT}};
+    server_name {{DOMAIN}};
+    
+    root {{ROOT_PATH}};
+    index index.html index.htm;
+    
+    # ========== SNIPPETS (nivel server) ==========
+    
+    # Seguridad básica
+    include /etc/nginx/snippets/server/00-core/01-security/security-server.conf;
+    
+    # Compresión gzip
+    include /etc/nginx/snippets/server/00-core/05-gzip/gzip.conf;
+    
+    # Headers de seguridad + caché
+    include /etc/nginx/snippets/server/00-core/02-headers/headers.conf;
+    
+    # Caché de archivos estáticos
+    include /etc/nginx/snippets/server/00-core/04-cache/cache-server.conf;
+    
+    # ========== LOGS ==========
+    access_log /var/log/nginx/{{SITE_NAME}}-access.log;
+    error_log /var/log/nginx/{{SITE_NAME}}-error.log;
+    
+    # ========== UBICACIONES ==========
+    
+    location / {
+        try_files $uri $uri/ =404;
+    }
+    
+    # Denegar acceso a archivos sensibles
+    location ~ /\.(git|env|htaccess) {
+        deny all;
+        return 404;
+    }
+}
+

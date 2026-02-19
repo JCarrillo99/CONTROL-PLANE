@@ -1,0 +1,26 @@
+[Unit]
+Description=Traefik Configuration Sync Daemon
+Documentation=man:inotifywait(1)
+After=network.target traefik.service
+Wants=traefik.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/debian-trixie/servers-install/traefik/sync
+ExecStart=/home/debian-trixie/servers-install/traefik/sync/traefik-sync-daemon.sh
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+User=root
+Group=root
+
+# Seguridad (ProtectSystem=false para permitir escritura en /etc)
+NoNewPrivileges=false
+PrivateTmp=true
+ProtectSystem=false
+ProtectHome=false
+
+[Install]
+WantedBy=multi-user.target
+

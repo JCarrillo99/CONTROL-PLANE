@@ -1,0 +1,51 @@
+server {
+    listen {{PORT}};
+    listen [::]:{{PORT}};
+    server_name {{DOMAIN}};
+    
+    root {{ROOT_PATH}};
+    index index.php index.html index.htm;
+    
+    # ========== SNIPPETS ==========
+    
+    include /etc/nginx/snippets/server/00-core/01-security/security-server.conf;
+    include /etc/nginx/snippets/server/00-core/05-gzip/gzip.conf;
+    include /etc/nginx/snippets/server/00-core/02-headers/headers.conf;
+    
+    # ========== LOGS ==========
+    access_log /var/log/nginx/{{SITE_NAME}}-access.log;
+    error_log /var/log/nginx/{{SITE_NAME}}-error.log;
+    
+    # ========== UBICACIONES ==========
+    
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    
+    # PHP-FPM
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        
+        # Timeouts para PHP
+        fastcgi_read_timeout 300s;
+        fastcgi_send_timeout 300s;
+        fastcgi_connect_timeout 60s;
+        
+        # Buffers para PHP
+        fastcgi_buffer_size 128k;
+        fastcgi_buffers 4 256k;
+        fastcgi_busy_buffers_size 256k;
+    }
+    
+    # Denegar acceso a archivos sensibles
+    location ~ /\.(env|git|htaccess) {
+        deny all;
+        return 404;
+    }
+}
+

@@ -1,0 +1,37 @@
+# Configuración para dev-juventudes-v2.yucatan.gob.mx - Traefik 3.4
+# Modo LOCAL: Traefik apunta a Apache en puerto 9200 que sirve aplicación Vue (template-vue)
+# PHP 7.4-FPM
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    dev-juventudes-v2-http:
+      rule: "Host(`dev-juventudes-v2.yucatan.gob.mx`)"
+      service: apache-9200-juventudes-v2
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    dev-juventudes-v2-main:
+      rule: "Host(`dev-juventudes-v2.yucatan.gob.mx`)"
+      service: apache-9200-juventudes-v2
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Apache local - Puerto 9200 (serviendo aplicación Vue)
+    apache-9200-juventudes-v2:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9200"
+        passHostHeader: true
+

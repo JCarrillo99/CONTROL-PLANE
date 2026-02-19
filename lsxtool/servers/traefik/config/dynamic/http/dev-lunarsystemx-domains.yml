@@ -1,0 +1,172 @@
+# Configuración para dominios DEV de lunarsystemx.com - Traefik 3.4
+# Modo LOCAL: Traefik apunta a Nginx en puerto 9100 que hace reverse proxy a aplicaciones
+# ENTORNO: DEV (HTTP redirige a HTTPS, SSL opcional)
+
+http:
+  routers:
+    # ========== CORE APIs ==========
+    
+    # Identity - NestJS 11 (puerto 3001)
+    dev-identity-http:
+      rule: "Host(`dev-identity.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    dev-identity-main:
+      rule: "Host(`dev-identity.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+    # Platform - NestJS 11 (puerto 3002)
+    dev-platform-http:
+      rule: "Host(`dev-platform.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    dev-platform-main:
+      rule: "Host(`dev-platform.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+    # Intelligence - FastAPI 0.109 (puerto 8002)
+    dev-intelligence-http:
+      rule: "Host(`dev-intelligence.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    dev-intelligence-main:
+      rule: "Host(`dev-intelligence.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+    # ========== FRONTEND (Next.js 16 Multi-tenant) ==========
+    
+    # Capaing - Next.js (puerto 3000)
+    dev-capaing-http:
+      rule: "Host(`dev-capaing.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    dev-capaing-main:
+      rule: "Host(`dev-capaing.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+    # Innovanista - Next.js (puerto 3000)
+    dev-innovanista-http:
+      rule: "Host(`dev-innovanista.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    dev-innovanista-main:
+      rule: "Host(`dev-innovanista.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+    # Lunar System X (principal) - Next.js (puerto 3000)
+    dev-lunarsystemx-http:
+      rule: "Host(`dev-lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    dev-lunarsystemx-main:
+      rule: "Host(`dev-lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+    # ========== TENANT APIs ==========
+    
+    api-dev-capaing-http:
+      rule: "Host(`api.dev-capaing.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    api-dev-capaing-main:
+      rule: "Host(`api.dev-capaing.lunarsystemx.com`)"
+      service: nginx-9100-lunarsystemx
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Nginx local - Puerto 9100 (reverse proxy a aplicaciones)
+    nginx-9100-lunarsystemx:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9100"
+        passHostHeader: true

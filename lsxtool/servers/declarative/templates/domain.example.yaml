@@ -1,0 +1,24 @@
+domain: dev-identity.lunarsystemx.com
+type: subdomain
+slug: identity
+environment: dev
+provider: LSX
+server: srvecnom-dev
+
+# server_web: quién atiende el dominio (nginx, apache, caddy, traefik)
+server_web:
+  type: nginx
+  version: "1.26"
+  mode: proxy          # proxy | static | php-fpm
+  root: /var/www/identity
+  listen_port: 9100
+  upstream:
+    service_type: api
+    tech: node
+    tech_version: 20.x
+    tech_provider: volta
+    tech_manager: yarn
+    port: 3001
+
+owner: equipo-desarrollo
+description: API de identidad (NestJS)

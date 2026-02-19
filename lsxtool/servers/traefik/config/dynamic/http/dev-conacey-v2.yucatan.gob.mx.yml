@@ -1,0 +1,32 @@
+# Configuración para dev-conacey-v2.yucatan.gob.mx - Traefik 3.4
+# Apache en puerto 9200 hace proxy a backend en puertos 8040 y 8050
+
+http:
+  routers:
+    # Router principal - dev-conacey-v2.yucatan.gob.mx
+    dev-conacey-v2-main:
+      rule: "Host(`dev-conacey-v2.yucatan.gob.mx`)"
+      service: apache-9200-conacey
+      entryPoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-to-https
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Apache local - Puerto 9200 (proxy a backend)
+    apache-9200-conacey:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9200"
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+          scheme: http
+

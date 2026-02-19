@@ -1,0 +1,47 @@
+# Configuración para dev-recibonomina.yucatan.gob.mx - Traefik 3.4
+# Modo LOCAL: Traefik apunta a Apache en puerto 9200 que sirve aplicación Laravel
+# PHP 7.4-FPM
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    dev-recibonomina-http:
+      rule: "Host(`dev-recibonomina.yucatan.gob.mx`)"
+      service: apache-9200-recibonomina
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    dev-recibonomina-main:
+      rule: "Host(`dev-recibonomina.yucatan.gob.mx`)"
+      service: apache-9200-recibonomina
+      entryPoints:
+        - websecure
+      # Middlewares simplificados para mejorar rendimiento
+      # - security-headers (añade latencia)
+      # - compress (añade latencia, Apache ya puede comprimir)
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Apache local - Puerto 9200 (serviendo aplicación Laravel)
+    apache-9200-recibonomina:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9200"
+        passHostHeader: true
+        # HealthCheck deshabilitado para mejorar rendimiento (Apache es estable)
+        # healthCheck:
+        #   path: /
+        #   interval: 30s
+        #   timeout: 10s
+        #   scheme: http
+        #   headers:
+        #     Host: dev-recibonomina.yucatan.gob.mx
+        # ServersTransport optimizado (si está disponible en Traefik 3.4)
+        # Nota: La lentitud principal viene de Laravel/PHP-FPM (cold start ~1.7s)
+

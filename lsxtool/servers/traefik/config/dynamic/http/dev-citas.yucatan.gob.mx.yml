@@ -1,0 +1,43 @@
+# Configuración para dev-citas.yucatan.gob.mx - Traefik 3.4
+# Modo LOCAL: Traefik apunta a Apache en puerto 9200 que sirve aplicación
+# DocumentRoot: /mnt/d/www/01-STIC/web/citas/app
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    dev-citas-http:
+      rule: "Host(`dev-citas.yucatan.gob.mx`)"
+      service: apache-9200-citas
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    dev-citas-main:
+      rule: "Host(`dev-citas.yucatan.gob.mx`)"
+      service: apache-9200-citas
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Apache local - Puerto 9200
+    apache-9200-citas:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9200"
+        passHostHeader: true
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+          scheme: http
+          headers:
+            Host: dev-citas.yucatan.gob.mx

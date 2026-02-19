@@ -1,0 +1,23 @@
+http:
+  routers:
+    # 🌐 TRAEFIK DASHBOARD - alta prioridad
+    traefik-dashboard:
+      rule: "Host(`dev-domains-170.lunarsystemx.com`)"
+      entryPoints:
+        - web
+        - websecure
+      service: api@internal
+      middlewares:
+        - redirect-to-https
+        - common-auth
+      priority: 1000   
+      tls: {}
+        # certResolver: letsencrypt
+        # domains:
+        #   - main: dev-domains-170.lunarsystemx.com
+        #   - sans:
+        #       - www.dev-domains-170.lunarsystemx.com
+        #       - api.dev-domains-170.lunarsystemx.com
+        #       - www.api.dev-domains-170.lunarsystemx.com
+        #       - dashboard.dev-domains-170.lunarsystemx.com
+        #       - www.dashboard.dev-domains-170.lunarsystemx.com

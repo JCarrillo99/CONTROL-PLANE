@@ -1,0 +1,72 @@
+# Ejemplo de configuración HTTP para dominio - Traefik 3.4
+http:
+  routers:
+    # Router para el dominio principal
+    example-com:
+      rule: "Host(`example.com`) || Host(`www.example.com`)"
+      service: example-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - security-headers
+        - compress
+        - cors
+
+    # Router para subdominio API
+    api-example-com:
+      rule: "Host(`api.example.com`)"
+      service: api-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - security-headers
+        - rate-limit
+        - cors
+
+    # Router para subdominio de administración
+    admin-example-com:
+      rule: "Host(`admin.example.com`)"
+      service: admin-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - security-headers
+        - common-auth
+        - compress
+
+  services:
+    # Servicio principal
+    example-service:
+      loadBalancer:
+        servers:
+          - url: "http://web-app:80"
+        healthCheck:
+          path: /health
+          interval: 30s
+          timeout: 5s
+
+    # Servicio API
+    api-service:
+      loadBalancer:
+        servers:
+          - url: "http://api-app:3000"
+        healthCheck:
+          path: /health
+          interval: 30s
+          timeout: 5s
+
+    # Servicio de administración
+    admin-service:
+      loadBalancer:
+        servers:
+          - url: "http://admin-app:8080"
+        healthCheck:
+          path: /health
+          interval: 30s
+          timeout: 5s

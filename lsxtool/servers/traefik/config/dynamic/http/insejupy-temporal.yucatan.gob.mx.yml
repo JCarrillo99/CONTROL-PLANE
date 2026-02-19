@@ -1,0 +1,39 @@
+# Configuración para insejupy-temporal.yucatan.gob.mx - Traefik 3.4
+# Apache en puerto 9200 sirve aplicación PHP (estructura public/app)
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    insejupy-temporal-http:
+      rule: "Host(`insejupy-temporal.yucatan.gob.mx`)"
+      service: apache-9200-insejupy-temporal
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    insejupy-temporal:
+      rule: "Host(`insejupy-temporal.yucatan.gob.mx`)"
+      service: apache-9200-insejupy-temporal
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Apache local - Puerto 9200
+    apache-9200-insejupy-temporal:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9200"
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+          scheme: http

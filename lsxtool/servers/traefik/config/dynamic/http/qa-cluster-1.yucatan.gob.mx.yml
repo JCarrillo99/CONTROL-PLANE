@@ -1,0 +1,52 @@
+# Configuración para qa-cluster-1.yucatan.gob.mx - Traefik 3.4
+# Modo LOCAL: Traefik apunta a Nginx en puerto 9100 que sirve archivos estáticos
+# Modo DOCKER: Ver archivo docker-compose.yml o configuración de Docker labels
+
+http:
+  routers:
+    # Router HTTP - redirige a HTTPS
+    qa-cluster-1-http:
+      rule: "Host(`qa-cluster-1.yucatan.gob.mx`)"
+      service: nginx-9100-local
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      priority: 100
+
+    # Router HTTPS - servicio principal
+    qa-cluster-1-main:
+      rule: "Host(`qa-cluster-1.yucatan.gob.mx`)"
+      service: nginx-9100-local
+      entryPoints:
+        - websecure
+      middlewares:
+        - security-headers
+        - compress
+      priority: 100
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Servicio Nginx local - Puerto 9100 (serviendo archivos estáticos)
+    nginx-9100-local:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9100"
+
+    # Servicio Apache local - Puerto 9200 (proxy a aplicaciones backend)
+    apache-9200-local:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9200"
+
+    # Servicio Docker (comentado - usar cuando se use Docker)
+    # nginx-9100-docker:
+    #   loadBalancer:
+    #     servers:
+    #       - url: "http://template-vue-frontend:80"
+    #     healthCheck:
+    #       path: /
+    #       interval: 30s
+    #       timeout: 5s
+
