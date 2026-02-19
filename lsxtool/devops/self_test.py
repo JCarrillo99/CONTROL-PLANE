@@ -16,7 +16,7 @@ from .init import init_environment
 from .validate import validate_environment
 from .deploy import deploy_environment
 from .status import show_status
-from core.doctor import run_doctor
+from lsxtool.core.doctor import run_doctor
 
 
 def run_self_test(
@@ -106,7 +106,7 @@ def run_self_test(
             if auth.get("type") == "key" and auth.get("key_path"):
                 key_path = Path(auth["key_path"].replace("~", str(Path.home())))
             
-            from core.ssh import ssh_execute
+            from lsxtool.core.ssh import ssh_execute
             success, stdout, stderr = ssh_execute(
                 host=host,
                 user=user,

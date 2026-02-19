@@ -15,10 +15,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from .fixture_loader import FixtureLoader
-from core.doctor import run_doctor
-from core.ssh import ssh_test_connection
-from core.gitlab import GitLabAPI
-from core.tools import mask_sensitive_data
+from lsxtool.core.doctor import run_doctor
+from lsxtool.core.ssh import ssh_test_connection
+from lsxtool.core.gitlab import GitLabAPI
+from lsxtool.core.tools import mask_sensitive_data
 
 
 def init_environment(

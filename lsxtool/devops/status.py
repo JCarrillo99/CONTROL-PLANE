@@ -13,9 +13,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from .fixture_loader import FixtureLoader
-from core.ssh import ssh_execute
-from core.gitlab import GitLabAPI
-from core.doctor import check_connectivity
+from lsxtool.core.ssh import ssh_execute
+from lsxtool.core.gitlab import GitLabAPI
+from lsxtool.core.doctor import check_connectivity
 
 
 def show_status(

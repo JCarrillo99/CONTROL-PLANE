@@ -1,0 +1,9 @@
+# Esquemas y contratos del Control Plane (referencia para API y validación).
+# Los modelos canónicos están en atlas/core/project/models.py
+version: 1
+state_root: /var/lib/lsx/atlas
+layers:
+  - core
+  - cli
+  - api
+  - providers
